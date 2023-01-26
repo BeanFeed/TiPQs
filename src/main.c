@@ -94,6 +94,7 @@ int main(void)
     factorsq = getFactors(q);
     ilstr(factorsq, out2);
     free(factorsq);
+    dbg_printf("%s\n", out1);
     dbg_printf("%s\n", out2);
     char outFull[50];
     //finalOut(factorsp, factorsq, outFull);
