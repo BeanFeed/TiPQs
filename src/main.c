@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <debug.h>
 #include <math.h>
+#include <ti/tokens.h>
 
 char *str_replace(char *str, char rep, char with) {
     char *ptr = str;
@@ -30,8 +31,8 @@ void getFactors(int num, int *res, int *size) {
 }
 
 
-void finalOut(int *p, int *q, char *res, int qSize, int pSize) {
-    
+void finalOut(int *p, int *q, char *res, int qSize, int pSize, int *amount) {
+    int count = 0;
     int oneAdded = 0;
     int i = 0, j = 0;
 
@@ -46,9 +47,11 @@ void finalOut(int *p, int *q, char *res, int qSize, int pSize) {
                 if(strstr(res,buf) == NULL) {
                     if(oneAdded == 0) {
                         sprintf(res, "%s", buf);
+                        count++;
                         oneAdded++;
                     } else {
                         sprintf(res, "%s, %s", res, buf);
+                        count++;
                     }
                 }
             } else {
@@ -57,10 +60,12 @@ void finalOut(int *p, int *q, char *res, int qSize, int pSize) {
                 dbg_printf("P: %d, Q: %d, Num: %s\n", p[j], q[i], buf);
                 if(strstr(res,buf) == NULL) {
                     sprintf(res,"%s, %s", res, buf);
+                    count++;
                 }
             }
         }
     }
+    *amount = count;
 }
 
 void ilstr(int *list, char *res, int size) {
@@ -121,17 +126,20 @@ int main(void)
 
 
     os_SetCursorPos(3,0);
-    os_PutStrLine(out1);
+    os_PutStrFull(out1);
     os_SetCursorPos(4,0);
-    os_PutStrLine(out2);
-
+    os_PutStrFull(out2);
+    
     //Get all possible solutions
     char final[50];
-    finalOut(factorsp, factorsq, final, qsize, psize);
+    int fullSize = 0;
+    finalOut(factorsp, factorsq, final, qsize, psize, &fullSize);
     os_SetCursorPos(6,0);
-    os_PutStrLine("All Possibilities:");
+    char si[22];
+    sprintf(si, "All Possibilities: %d", fullSize);
+    os_PutStrFull(si);
     os_SetCursorPos(7,0);
-    os_PutStrLine(final);
+    os_PutStrFull(final);
     while(!os_GetCSC());
     return 0;
 }
