@@ -5,34 +5,40 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <debug.h>
+#include <math.h>
+
 char *str_replace(char *str, char rep, char with) {
     char *ptr = str;
     while ((ptr = strchr (ptr, rep)) != NULL) *ptr++ = with;
     return str;
 }
 
-void * getFactors(int num) {
+void getFactors(int num, int *res, const int *size) {
     int addedItems = 0;
-    static int res[20];
+    size = &addedItems;
+    //int temp[20];
     for (int i = 1; i <= num; i++)
     {
         //dbg_printf("loop: %d, Num: %d\n", i, num);
-        if(i % 1 == 0) {
+        if(fmod((float)num/ (float)i, 1.0) == 0) {
             res[addedItems] = i;
-            //dbg_printf("res: %d\n", res[2]);
+            //printf("i: %d, NumDiv: %d, res: %d\n", i, num / i, res[i]);
             addedItems++;
         }
     }
-    return res;
 }
 
+/*
 void finalOut(int *p, int *q, char *res) {
     
     int oneAdded = 0;
     int i = 0, j = 0;
-    int qSize = sizeof(q) - 1, pSize = sizeof(p) - 1;
-    for(i = 0; i < qSize; i++) {
-        for(j = 0; j < pSize; j++) {
+    size_t qSize = sizeof(q) / sizeof(q[0]), pSize = sizeof(p) / sizeof(p[0]);
+    char buf[21];
+    sprintf(buf, "Q Size: %zu, P Size: %zu", qSize, pSize);
+    dbg_printf("%s", buf);
+    for(i = 0; i < (int)qSize; i++) {
+        for(j = 0; j < (int)pSize; j++) {
             if((p[j] / q[i]) % 1 == 0) {
                 char buf[20];
                 int num = p[j] / q[i];
@@ -56,11 +62,12 @@ void finalOut(int *p, int *q, char *res) {
         }
     }
 }
+
 void ilstr(int *list, char *res) {
-    int listSize = sizeof(list);
-    //dbg_printf("list Size: %d", listSize);
+    int listSize = sizeof(list) / sizeof(list[0]);
+    dbg_printf("list Size: %d\n", listSize);
     int oneAdded = 0;
-    for(int i = 0; i < listSize - 1; i++) {
+    for(int i = 0; i < listSize; i++) {
         if(oneAdded == 0) {
             sprintf(res, "%d", list[i]);
             oneAdded++;
@@ -69,6 +76,7 @@ void ilstr(int *list, char *res) {
         }
     }
 }
+*/
 int main(void)
 {
     os_ClrHome();
@@ -78,37 +86,17 @@ int main(void)
     os_GetStringInput("What is P: ", pstr, 5);
     p = strtod(pstr, NULL);
     os_SetCursorPos(1,0);
+    /*
     int q;
     char qstr[5];
     os_GetStringInput("What is Q: ", qstr, 5);
     q = strtod(qstr, NULL);
-    int *factorsp;
-    factorsp = getFactors(p);
-    
-    char out1[20];
-    ilstr(factorsp, out1);
+     */
+    int *factorsp = malloc(20);
+    int psize;
+    getFactors(p, factorsp, &psize);
+    dbg_printf("P: %d, P Size: %d\n",p, psize);
     free(factorsp);
-    //dbg_printf("%s", out1);
-    char out2[20];
-    int *factorsq;
-    factorsq = getFactors(q);
-    ilstr(factorsq, out2);
-    free(factorsq);
-    dbg_printf("%s\n", out1);
-    dbg_printf("%s\n", out2);
-    char outFull[50];
-    //finalOut(factorsp, factorsq, outFull);
-    os_SetCursorPos(1,0);
-    //dbg_printf("%s\n", out1);
-    char toOut1[20];
-    sprintf(toOut1,"p(%d) = %s", p, out1);
-    os_SetCursorPos(2,0);
-    //dbg_printf("%s\n", out1);
-    os_PutStrLine(toOut1);
-    os_SetCursorPos(3,0);
-    char toOut2[20];
-    sprintf(toOut2, "q(%d) = %s", q, out2);
-    os_PutStrLine(toOut2);
     while(!os_GetCSC());
     return 0;
 }
