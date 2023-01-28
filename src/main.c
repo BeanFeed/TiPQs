@@ -88,58 +88,59 @@ int main(void)
 
     //Get p input
     int p;
-    char pstr[5];
+    char pstr[10];
     os_GetStringInput("What is P: ", pstr, 5);
     p = strtod(pstr, NULL);
     os_SetCursorPos(1,0);
 
     //Get q input
     int q;
-    char qstr[5];
+    char qstr[10];
     os_GetStringInput("What is Q: ", qstr, 5);
     q = strtod(qstr, NULL);
 
     //Get all factors of q and the amount of factors
-    int factorsp[20];
+    int factorsp[30];
     int psize;
     getFactors(p, factorsp, &psize);
-    //dbg_printf("P: %d, P Size: %d\n",p, psize);
+    dbg_printf("Checkpoint 1\n");
 
     //Get all factors of q and the amount of factors
-    int factorsq[20];
+    int factorsq[30];
     int qsize;
     getFactors(q, factorsq, &qsize);
-
+    dbg_printf("Checkpoint 2\n");
     //Get p list as a string
-    char strpl[20];
-    ilstr(factorsp, strpl, psize);
-    char out1[20];
-    sprintf(out1, "p(%d)=%s",p,strpl);
-
-    //Get q list as a string
-    char strql[20];
-    ilstr(factorsq, strql, qsize);
-    char out2[20];
-    sprintf(out2, "q(%d)=%s",q,strql);
-    //dbg_printf("%s", out2);
-
-
-
+    char strl[20];
+    ilstr(factorsp, strl, psize);
+    char out[50];
+    sprintf(out, "p(%d)=%s",p,strl);
+    dbg_printf("Checkpoint 3\n");
     os_SetCursorPos(3,0);
-    os_PutStrFull(out1);
-    os_SetCursorPos(4,0);
-    os_PutStrFull(out2);
+    os_PutStrFull(out);
+
+    //Clear strl
+    sprintf(strl, "");
+    //Get q list as a string
+    ilstr(factorsq, strl, qsize);
+
+    sprintf(out, "q(%d)=%s",q,strl);
+    dbg_printf("Checkpoint 4\n");
+    os_SetCursorPos(3,0);
+    os_PutStrFull(out);
+    //dbg_printf("%s", out2);
     
     //Get all possible solutions
-    char final[50];
+    //char final[50];
     int fullSize = 0;
-    finalOut(factorsp, factorsq, final, qsize, psize, &fullSize);
+    finalOut(factorsp, factorsq, out, qsize, psize, &fullSize);
+    dbg_printf("Checkpoint 5\n");
     os_SetCursorPos(6,0);
     char si[22];
     sprintf(si, "All Possibilities: %d", fullSize);
     os_PutStrFull(si);
     os_SetCursorPos(7,0);
-    os_PutStrFull(final);
+    os_PutStrFull(out);
     while(!os_GetCSC());
     return 0;
 }
