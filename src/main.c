@@ -41,7 +41,7 @@ void finalOut(int *p, int *q, char *res, int qSize, int pSize, int *amount) {
             if(fmod((float)p[j] / (float)q[i], 1.0) == 0) {
                 char buf[20];
                 int num = p[j] / q[i];
-                dbg_printf("P: %d, Q: %d, Num: %d\n", p[j], q[i], num);
+                //dbg_printf("P: %d, Q: %d, Num: %d\n", p[j], q[i], num);
                 sprintf(buf,"%d",num);
                 
                 if(strstr(res,buf) == NULL) {
@@ -57,7 +57,7 @@ void finalOut(int *p, int *q, char *res, int qSize, int pSize, int *amount) {
             } else {
                 char buf[20];
                 sprintf(buf,"%d/%d",p[j],q[i]);
-                dbg_printf("P: %d, Q: %d, Num: %s\n", p[j], q[i], buf);
+                //dbg_printf("P: %d, Q: %d, Num: %s\n", p[j], q[i], buf);
                 if(strstr(res,buf) == NULL) {
                     sprintf(res,"%s, %s", res, buf);
                     count++;
@@ -105,20 +105,22 @@ int main(void)
     getFactors(p, factorsp, &psize);
     dbg_printf("Checkpoint 1\n");
 
+    int moveMore = 0;
     //Get all factors of q and the amount of factors
     int factorsq[30];
     int qsize;
     getFactors(q, factorsq, &qsize);
     dbg_printf("Checkpoint 2\n");
     //Get p list as a string
-    char strl[20];
+    char strl[100];
     ilstr(factorsp, strl, psize);
     char out[50];
     sprintf(out, "p(%d)=%s",p,strl);
     dbg_printf("Checkpoint 3\n");
-    os_SetCursorPos(3,0);
+    os_SetCursorPos(0,0);
+    os_ClrHome();
     os_PutStrFull(out);
-
+    moveMore += (int)(strlen(out) / 25);
     //Clear strl
     sprintf(strl, "");
     //Get q list as a string
@@ -126,8 +128,9 @@ int main(void)
 
     sprintf(out, "q(%d)=%s",q,strl);
     dbg_printf("Checkpoint 4\n");
-    os_SetCursorPos(3,0);
+    os_SetCursorPos(moveMore + 1,0);
     os_PutStrFull(out);
+    moveMore += (int)(strlen(out) / 25);
     //dbg_printf("%s", out2);
     
     //Get all possible solutions
@@ -135,12 +138,16 @@ int main(void)
     int fullSize = 0;
     finalOut(factorsp, factorsq, out, qsize, psize, &fullSize);
     dbg_printf("Checkpoint 5\n");
-    os_SetCursorPos(6,0);
+    os_SetCursorPos(moveMore + 3,0);
     char si[22];
     sprintf(si, "All Possibilities: %d", fullSize);
     os_PutStrFull(si);
-    os_SetCursorPos(7,0);
+    moveMore += (int)(strlen(si) / 25);
+    os_SetCursorPos(moveMore + 4,0);
     os_PutStrFull(out);
+    moveMore += (int)(strlen(out) / 25);
+    os_SetCursorPos(moveMore + 6,0);
+    os_PutStrFull("Press Any Key To Exit");
     while(!os_GetCSC());
     return 0;
 }
